@@ -1,6 +1,49 @@
+import random
+
 MAX_LINES = 3
 MIN_BET = 10
 MAX_BET = 100
+
+ROWS = 3
+COLS = 5
+
+symbol_count = {
+    "S": 1,
+    "A": 2,
+    "C": 4,
+    "K": 6,
+    "L": 8
+}
+
+def get_spin(rows, cols, symbols):
+    all_symbols = []
+    for symbol, symbol_count in symbols.items():
+        for _ in range(symbol_count):
+            all_symbols.append(symbol)
+
+    columns = []
+    for _ in range(cols):
+        column = []
+        current_symbols = all_symbols[:]
+        for _ in range(rows):
+            value = random.choice(current_symbols)
+            current_symbols.remove(value)
+            column.append(value)
+    
+        columns.append(column)
+
+    return columns
+
+
+def print_slot(columns):
+    for row in range(len(columns[0])):
+        for i, column in enumerate(columns):
+            if i != len(columns) - 1:
+                print(column[row], end=" | ")
+            else:
+                print(column[row], end="")
+
+        print()
 
 
 def deposit():
@@ -48,7 +91,6 @@ def get_bet():
 def main():
     balance = deposit()
     lines = get_number_of_lines()
-    bet = get_bet()
     while True:
         bet = get_bet()
         total_bet = bet * lines
@@ -57,8 +99,10 @@ def main():
             print(f"You do not have enough money to deposit ${bet}, your balance is: ${balance}")
         else:
             break
-        
+
     print(f"You are betting ${bet} on {lines} lines. Total bet is equal to: ${total_bet}")
 
+    slot = get_spin(ROWS, COLS, symbol_count)
+    print_slot(slot)
 
 main()
